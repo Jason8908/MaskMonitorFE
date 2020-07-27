@@ -17,9 +17,7 @@
             let feed = require('./scripts/feed.js'); //Require feed
             let checkConnection = require('./scripts/checkConnection.js') //Require check connection
             let fs = require('fs');
-            let ranNum = Math.round(1+Math.random()*3);
             $(document).ready(() => {
-                $(`<audio autoplay><source src="./images/logo${ranNum}.mp3" type="audio/mpeg"></audio>`).appendTo('#overlay')
                 setTimeout(function() {$('#overlay').fadeOut('fast');}, 3300);
                 $("#connectBtn").click(async function() {
                     //Check for ip

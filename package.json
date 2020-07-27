@@ -1,0 +1,25 @@
+{
+  "name": "codeathon",
+  "version": "1.0.0",
+  "description": "A mask monitoring application.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Jason Su and Tarun Haridasan",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^9.1.1"
+  },
+  "dependencies": {
+    "bootstrap": "^4.5.0",
+    "electron-titlebar": "0.0.3",
+    "electron-titlebar-windows": "^3.0.0",
+    "emailjs": "^3.2.1",
+    "emailjs-com": "^2.6.3",
+    "fomantic-ui": "^2.8.6",
+    "googleapis": "^39.2.0",
+    "jquery": "^3.5.1",
+    "popper.js": "^1.16.1"
+  }
+}

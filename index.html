@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mask Monitor</title>
+        <link rel="icon" href="images/icon2.png">
+        <!-- External Styles -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="./semantic/dist/semantic.min.css">
+        <link rel="stylesheet" href='styles/styles.css'>
+        <!-- External Scripts -->        
+        <script type="text/javascript">
+            window.$ = window.jQuery = require('jquery'); //Require jquery
+            require('bootstrap'); //Require bootstrap
+            require('./render.js'); //Require render.js
+            require('fomantic-ui'); //Require Semantic
+            let logs = require('./scripts/logs.js'); //Require Logs
+            let feed = require('./scripts/feed.js'); //Require feed
+            let checkConnection = require('./scripts/checkConnection.js') //Require check connection
+            let fs = require('fs');
+            let ranNum = Math.round(1+Math.random()*3);
+            $(document).ready(() => {
+                $(`<audio autoplay><source src="./images/logo${ranNum}.mp3" type="audio/mpeg"></audio>`).appendTo('#overlay')
+                setTimeout(function() {$('#overlay').fadeOut('fast');}, 3300);
+                $("#connectBtn").click(async function() {
+                    //Check for ip
+                    let ip = $("#ipAdd").val();
+                    if (!ip) return;
+                    localStorage.setItem('ip', ip);
+                    $("#connectBtn").prop('disabled', true);
+                    $("#ipAddContainer").addClass("disabled");
+                    $("#dcBtn").prop('disabled', false);
+                    //Change loading image
+                    logs.print(0, "Connecting...");
+                    feed.loading();
+                    //Check status of the server
+                    let statusURL = `http://${ip}:5000/status`;
+                    let serverStatus = await checkConnection(statusURL);
+                    if (!serverStatus) {
+                        logs.print(-1, "Connection Failed!");
+                        feed.standard();
+                        localStorage.setItem('connection', '');
+                        //Enable and disable btns 
+                        $("#connectBtn").prop('disabled', false);
+                        $("#ipAddContainer").removeClass("disabled");
+                        $("#dcBtn").prop('disabled', true);
+                        return;   
+                    }
+                    logs.print(1, "Connected!");
+                    //Connect to video server
+                    let videoURL = `http://${ip}:5000/video-feed`;
+                    localStorage.setItem('connection', `http://${ip}:5000/video-feed`);
+                    feed.live(videoURL);
+                    //Connect to log server
+                    let logURL = `http://${ip}:5000/video-logs`;
+                    logs.live(logURL);
+                    
+                });
+                $("#dcBtn").click(function() {
+                    //Enable and disable btns 
+                    $("#connectBtn").prop('disabled', false);
+                    $("#ipAddContainer").removeClass("disabled");
+                    $("#dcBtn").prop('disabled', true);
+
+                    feed.standard();
+                    logs.stop();
+                    logs.print(-1, "Disconnected!");
+                });
+            });
+        </script>
+        <link rel="stylesheet" href="https://unpkg.com/simplebar@latest/dist/simplebar.css"/>
+        <script src="https://unpkg.com/simplebar@latest/dist/simplebar.min.js"></script>
+    </head>
+    <body id="body">    
+        <div id="overlay">
+            <video autoplay id="logo"><source src="./images/logo.mp4" type="video/mp4"></video>
+            
+        </div>
+        <span id="titleBar" style="width: 100%; display: inline-block;"><p style="float:left; color:white; z-index: 1; position: absolute; margin:4px; margin-left: 10px; color:#8E9297; z-index: 10000">𝙈𝙖𝙨𝙠 𝙈𝙤𝙣𝙞𝙩𝙤𝙧™</p></span>
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #36393F; border-bottom-style: solid; border-color: #2B2D32;" id="navigationBar">
+            <!--Brand name + logo -->
+            <a class="navbar-brand" href="#">
+                <img src="images/icon2.png" width="50" height="50" class="d-inline-block align-center" alt="" loading="lazy">
+                Mask Monitor
+            </a>
+            <!-- Expand Link Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Links -->
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link active" href="index.html">Monitoring</span></a>
+                    <a class="nav-item nav-link" href="reports.html">Logs and Reports</a>
+                    <a class="nav-item nav-link" href="help.html">Help</a>
+                </div>
+            </div>
+        </nav>
+        <div id="mainBody">
+            <div id="liveFeed">
+                <div id="liveFeedInner">
+                    <div id="container">
+                        <div id="imgWrapper">         
+                            <img src="./images/kayne.png" id="feed">
+                        </div>
+                    </div>
+                    <br><br>
+                    <div id="ipAddContainer" class="ui labeled input">
+                        <div class="ui label">
+                            http://
+                        </div>
+                        <input type="text" id="ipAdd" placeholder="IP">
+                        <div class="ui label">
+                            :5000/video-feed
+                        </div>
+                    </div>   
+                    <br><br>
+                    <div class="ui buttons">
+                        <button class="ui button positive" id="connectBtn">Connect</button>
+                        <div class="or"></div>
+                        <button class="ui negative button" id="dcBtn" disabled>Disconnect</button>
+                    </div> 
+                </div>
+            </div>
+            <div id="reports"></div>        
+        </div>    
+    </body>
+</html>

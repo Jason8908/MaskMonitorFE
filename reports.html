@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mask Monitor</title>
+        <link rel="icon" href="images/icon2.png">
+        <!-- External Styles -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="./semantic/dist/semantic.min.css">
+        <link rel="stylesheet" href='styles/styles.css'>
+        <!-- External Scripts -->        
+        <script type="text/javascript">
+            window.$ = window.jQuery = require('jquery'); //Require jquery
+            require('bootstrap'); //Require bootstrap
+            require('./render.js'); //Require render.js
+            require('fomantic-ui'); //Require Semantic
+            let fs = require('fs');
+            
+
+
+            $(document).ready(function() {
+                //Parsing the JSON file into a map using fs.
+                let logPath = './data/logs.json';
+                let logRead = fs.readFileSync(logPath, 'utf8');
+                let logFile = JSON.parse(logRead); //ready for use 
+                let logArr = logFile['logs'];
+
+                //Read each log and print it to the cards page
+                let cardManager = `<div class="ui four inverted stackable cards">`;
+                for(let i = logArr.length-1; i>=0; i--) {
+                    let detected = logArr[i].isMask ? "Mask was detected.": "Mask was not detected." 
+                    cardManager += `<div class="card">
+                        <div class="image">
+                            <img style="width: 290px; height: 325px;" src="data:image/png;base64, ${logArr[i].image}">
+                        </div>
+                        <div class="content">
+                            <div class="header">Event</div>
+                            <div class="meta">
+                                <a>Time: ${logArr[i].date} @ ${logArr[i].time}</a>
+                            </div>
+                            <div class="description">
+                                ${detected}
+                            </div>
+                        </div>              
+                    </div>`;
+                }
+                cardManager += `</div>`
+                $(cardManager).appendTo('#mainBody');
+            });         
+        </script>
+    </head>
+    <body id="body">
+        <!-------------------Title Bar ----------------->
+        <span id="titleBar" style="width: 100%; display: inline-block;"><p style="float:left; color:white; z-index: 1; position: absolute; margin:4px; margin-left: 10px; color:#8E9297;">𝙈𝙖𝙨𝙠 𝙈𝙤𝙣𝙞𝙩𝙤𝙧™</p></span>
+
+        <!-------------------NAV BAR-------------------->
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #36393F; border-bottom-style: solid; border-color: #2B2D32;" id="navigationBar">
+            <!--Brand name + logo -->
+            <a class="navbar-brand" href="#">
+                <img src="images/icon2.png" width="50" height="50" class="d-inline-block align-center" alt="" loading="lazy">
+                Mask Monitor
+            </a>
+            <!-- Expand Link Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Links -->
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="index.html">Monitoring</span></a>
+                    <a class="nav-item nav-link active" href="reports.html">Logs and Reports</a>
+                    <a class="nav-item nav-link" href="help.html">Help</a>
+                </div>
+            </div>
+        </nav>
+
+        <!------------------- CONTENTS -------------------->
+        
+        <div id="mainBody" style="text-align: center; overflow: scroll">
+            <br>
+            <!--Cards Manager-->
+        </div>
+        
+        
+    </body>
+</html>

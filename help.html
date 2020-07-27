@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mask Monitor</title>
+        <link rel="icon" href="images/icon2.png">
+        <!-- External Styles -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="./semantic/dist/semantic.min.css">
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <link rel="stylesheet" href='styles/styles.css'>
+        <!-- External Scripts -->        
+        <script type="text/javascript">
+            window.$ = window.jQuery = require('jquery'); //Require jquery
+            require('bootstrap'); //Require bootstrap
+            require('./render.js'); //Require render.js
+            require('fomantic-ui'); //Require Semantic
+            let emailjs = require('emailjs-com'); //Require email
+            function remClasses(element) {
+                element.removeClass("success error")
+            }
+            function submitForm() {
+
+                let error = false;
+
+                //Reset classes
+                remClasses($("#firstName").parent());
+                remClasses($("#lastName").parent());
+                remClasses($("#email").parent());
+                remClasses($("#issue").parent());
+                remClasses($("#checkbox").parent().parent());
+                remClasses($(".ui.massive.inverted.form"));
+
+                //Get first name
+                let firstName = $("#firstName").val();
+                if (!firstName) {
+                    $("#firstName").parent().addClass("error");
+                    error = true;
+                }
+                else {
+                    $("#firstName").parent().addClass("success");
+                }
+                //Get last name
+                let lastName = $("#lastName").val();
+                if (!lastName) {
+                    $("#lastName").parent().addClass("error");
+                    error = true;
+                }
+                else {
+                    $("#lastName").parent().addClass("success");
+                }
+                //Get email
+                let email = $("#email").val();
+                if (!email) {
+                    $("#email").parent().addClass("error");
+                    error = true;
+                }
+                else {
+                    $("#email").parent().addClass("success");
+                }
+                //Issue
+                let issue = $("#issue").val();
+                if (!issue) {
+                    $("#issue").parent().addClass("error");
+                    error = true;
+                }
+                else {
+                    $("#issue").parent().addClass("success");
+                }
+                //Check if checkbox is pressed
+                let checkbox = $("#checkbox").prop('checked');
+                if (!checkbox) {
+                    $("#checkbox").parent().parent().addClass("error");
+                    error = true;
+                }
+                else {
+                    $("#checkbox").parent().parent().addClass("success");
+                }
+                //Change state of the entire form
+                if (error) {
+                    $(".ui.massive.inverted.form").addClass("error");
+                    return;
+                }
+                //On Success
+                let serviceID = "gmail";
+                let templateID = "template_jvivnk6N";
+                let templateParams = {
+                    name: `${lastName}, ${firstName}`,
+                    email: email,
+                    issue: issue
+                };
+                let userID = "user_RxPbA4vA3eWHcISNVo1db";
+                emailjs.send(serviceID, templateID, templateParams, userID)
+                .then(function(response){
+                    $(".ui.massive.inverted.form").addClass("success");
+                })
+                .catch(function(err) {
+                    //alert("Something went wrong...");
+                })                
+            } 
+            $(document).ready(function(){
+                $(".ui.submit.button").click(submitForm);
+            });         
+        </script>
+    </head>
+    <body id="body">
+        <!-------------------Title Bar ----------------->
+        <span id="titleBar" style="width: 100%; display: inline-block;"><p style="float:left; color:white; z-index: 1; position: absolute; margin:4px; margin-left: 10px; color:#8E9297;" >𝙈𝙖𝙨𝙠 𝙈𝙤𝙣𝙞𝙩𝙤𝙧™</p></span>
+
+        <!-------------------NAV BAR-------------------->
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #36393F; border-bottom-style: solid; border-color: #2B2D32;" id="navigationBar">
+            <!--Brand name + logo -->
+            <a class="navbar-brand" href="#">
+                <img src="images/icon2.png" width="50" height="50" class="d-inline-block align-center" alt="" loading="lazy">
+                Mask Monitor
+            </a>
+            <!-- Expand Link Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Links -->
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="index.html">Monitoring</span></a>
+                    <a class="nav-item nav-link" href="reports.html">Logs and Reports</a>
+                    <a class="nav-item nav-link active" href="help.html">Help</a>
+                </div>
+            </div>
+        </nav>
+
+        <!------------------- CONTENTS -------------------->
+        <div id="mainBody" style="text-align: center">
+            <div id="formContainer">
+                <div id="formContainerInner">            
+                    <div class="ui massive inverted form" style="display: inline-block;width: 50%;" >
+                        <!--First and Last Name-->
+                        <div class="two fields">
+                          <div class="field">
+                            <label>First Name</label>
+                            <input id="firstName" placeholder="First Name" type="text">
+                          </div>
+                          <div class="field">
+                            <label>Last Name</label>
+                            <input id="lastName" placeholder="Last Name" type="text">
+                          </div>
+                        </div>
+                        <!--Email Field -->
+                        <div class="field">
+                            <label>E-mail</label>
+                            <input id="email" type="text" placeholder="joe@schmoe.com">
+                        </div>
+                        <!--Issue-->
+                        <div class="field">
+                            <label>What seems to be the issue?</label>
+                            <textarea id="issue" rows="4"></textarea>
+                        </div>
+                        <!--Conditions-->
+                        <div class="field">
+                            <div class="ui checkbox">
+                              <input id="checkbox" type="checkbox" tabindex="0">
+                              <label>I agree to the Terms and Conditions</label>
+                            </div>
+                          </div>
+                        <!--Success Message-->
+                        <div class="ui success message">
+                            <div class="header">Form Completed</div>
+                            <p>You have submitted a support token. Our team will get to you as soon as possible!</p>
+                        </div>
+                        <!--Error Message -->
+                        <div class="ui error message">
+                            <div class="header">Action Forbidden</div>
+                            <p>Please enter all necessay information.</p>
+                        </div>
+                        <!--Submit Token-->
+                        <div class="ui submit button">Submit Support Ticket</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>       
+    </body>
+</html>

@@ -21,9 +21,8 @@
     "googleapis": "^39.2.0",
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",
-	"diff": ">=3.5.0",
-	"growl": ">=1.10.0",
-	"lodash.template": ">=4.5.0",
-	"diff": ">=3.5.0"
+    "diff": ">=3.5.0",
+    "growl": ">=1.10.0",
+    "lodash.template": ">=4.5.0"
   }
 }

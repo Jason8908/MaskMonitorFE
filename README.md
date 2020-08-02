@@ -1,4 +1,4 @@
-<img src='https://img.shields.io/github/v/release/Jason8908/MaskMonitorFE'></img>
+<img src='https://img.shields.io/github/v/release/Jason8908/MaskMonitorFE'>  </img><img src='https://img.shields.io/github/languages/top/Jason8908/MaskMonitorFE'></img>
 # MaskMonitorFE
 Electron JS application (front-end code) to be used with Mask Monitor Backend. Made for Stouffville Codeathon.
 
